@@ -1,0 +1,19 @@
+page-login {
+
+  .login-btn {
+    margin-bottom: 0;
+  }
+
+  .login-footer {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+
+  .login-verify {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+  }
+}

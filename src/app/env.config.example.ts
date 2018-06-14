@@ -1,0 +1,8 @@
+export const FIREBASE_CONFIG = {
+  apiKey: "<YOUR_FIREBASE_CREDENCIALS>",
+  authDomain: "<YOUR_FIREBASE_CREDENCIALS>",
+  databaseURL: "<YOUR_FIREBASE_CREDENCIALS>",
+  projectId: "<YOUR_FIREBASE_CREDENCIALS>",
+  storageBucket: "<YOUR_FIREBASE_CREDENCIALS>",
+  messagingSenderId: "<YOUR_FIREBASE_CREDENCIALS>"
+};
