@@ -1,8 +1,8 @@
 import {Component, ViewChild, OnInit} from '@angular/core';
 import {IonicPage, NavController, AlertController} from 'ionic-angular';
-import {AngularFireAuth} from 'angularfire2/auth';
+import {AngularFireAuth} from '@angular/fire/auth';
 import {Firebase} from '@ionic-native/firebase';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 
 /**
  * Generated class for the LoginPage page.
