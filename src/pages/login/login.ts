@@ -34,6 +34,7 @@ export class LoginPage implements OnInit {
     this.fireAuth.authState.pipe(
       map(async (auth: firebase.User) => {
         const token = await auth.getIdToken();
+        console.log('LoginPage ngOnInit() token', token);
         if (token) {
           this.doLogin();
         }
@@ -49,7 +50,7 @@ export class LoginPage implements OnInit {
 
   private async verifyCode(code: string, verificationId: string): Promise<void> {
     const credential = await firebase.auth.PhoneAuthProvider.credential(verificationId, code);
-    await firebase.auth().signInWithCredential(credential);
+    await firebase.auth().signInAndRetrieveDataWithCredential(credential);
     this.doLogin();
   }
 
@@ -61,6 +62,7 @@ export class LoginPage implements OnInit {
       inputs: [
         {
           name: 'code',
+          type: 'tel',
           placeholder: 'Code'
         },
       ],
