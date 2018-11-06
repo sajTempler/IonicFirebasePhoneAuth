@@ -1,8 +1,9 @@
 import {Component, ViewChild, OnInit} from '@angular/core';
-import {IonicPage, NavController, AlertController} from 'ionic-angular';
+import {IonicPage, NavController, AlertController, TextInput} from 'ionic-angular';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Firebase} from '@ionic-native/firebase';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
+import {map} from 'rxjs/operators/map';
 
 /**
  * Generated class for the LoginPage page.
@@ -18,65 +19,42 @@ import * as firebase from 'firebase/app';
 })
 export class LoginPage implements OnInit {
 
-  @ViewChild('phoneNumber') phoneNumber;
+  @ViewChild('phoneNumber') phoneNumber: TextInput;
 
   constructor(
     private navCtrl: NavController,
-    private fireAuth: AngularFireAuth,
     private alertCtrl: AlertController,
-    private fire: Firebase,
+    private fireAuth: AngularFireAuth,
+    private fireNative: Firebase,
   ) {
   }
 
   ngOnInit() {
     console.log('LoginPage ngOnInit');
-    this.fireAuth.authState.subscribe(auth => {
-      if (!auth) {
-        return;
-      }
-
-      auth.getIdToken()
-        .then((token: string) => {
-          console.log('LoginPage getIdToken token', token);
-          if (token) {
-            this.doLogin();
-          }
-        });
-    });
-  }
-
-  // tslint:disable-next-line
-  private registerPhone(): void {
-    console.log('registerPhone');
-    const phone = '+48' + this.phoneNumber.value;
-    console.log('registerPhone phone', phone);
-    this.fire.verifyPhoneNumber(phone, 120)
-      .then((res) => {
-        const {verificationId} = res;
-        console.log('registerPhone verificationId', verificationId);
-        this.showPrompt(verificationId);
-      })
-      .catch(err => {
-        console.log('registerPhone err', err);
-      })
-  }
-
-  private async verifyCode(code: string, verificationId: string) {
-    try {
-      const credential = await firebase.auth.PhoneAuthProvider.credential(verificationId, code);
-      await firebase.auth().signInWithCredential(credential)
-        .then(() => {
+    this.fireAuth.authState.pipe(
+      map(async (auth: firebase.User) => {
+        const token = await auth.getIdToken();
+        if (token) {
           this.doLogin();
-        })
-        .catch(err => {
-          console.error('LoginPage verifyCode signInWithCredential err', err);
-        })
-    } catch (err) {
-      console.error('LoginPage verifyCode err', err);
-    }
+        }
+      })
+    );
   }
 
-  private showPrompt(verificationId: string) {
+  async registerPhone(): Promise<void> {
+    const phone = '+48' + this.phoneNumber.value;
+    const {verificationId} = await this.fireNative.verifyPhoneNumber(phone, 120);
+    this.showPrompt(verificationId);
+  }
+
+  private async verifyCode(code: string, verificationId: string): Promise<void> {
+    const credential = await firebase.auth.PhoneAuthProvider.credential(verificationId, code);
+    await firebase.auth().signInWithCredential(credential);
+    this.doLogin();
+  }
+
+  private showPrompt(verificationId: string): void {
+
     let promptCode = this.alertCtrl.create({
       title: 'Verify',
       message: 'Type code that was received via SMS',
@@ -89,9 +67,7 @@ export class LoginPage implements OnInit {
       buttons: [
         {
           text: 'Cancel',
-          handler: data => {
-            return;
-          }
+          role: 'cancel'
         },
         {
           text: 'Verify',

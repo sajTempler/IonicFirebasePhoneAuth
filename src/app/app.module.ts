@@ -7,9 +7,9 @@ import {StatusBar} from '@ionic-native/status-bar';
 import {MyApp} from './app.component';
 import {AngularFireModule} from "@angular/fire";
 import {AngularFireAuthModule} from '@angular/fire/auth';
-import {Firebase} from '@ionic-native/firebase';
 import {FIREBASE_CONFIG} from "./env.config";
 import {LoginPageModule} from "../pages/login/login.module";
+import {FirebaseProvider} from '../mock.providers';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import {LoginPageModule} from "../pages/login/login.module";
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    Firebase,
+    FirebaseProvider,
   ]
 })
 export class AppModule {
