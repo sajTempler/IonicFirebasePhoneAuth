@@ -10,6 +10,7 @@ import {AngularFireAuthModule} from '@angular/fire/auth';
 import {FIREBASE_CONFIG} from "./env.config";
 import {LoginPageModule} from "../pages/login/login.module";
 import {FirebaseProvider} from '../mock.providers';
+import {HomePageModule} from "../pages/home/home.module";
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import {FirebaseProvider} from '../mock.providers';
   imports: [
     BrowserModule,
     LoginPageModule,
+    HomePageModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     AngularFireAuthModule,
     IonicModule.forRoot(MyApp)

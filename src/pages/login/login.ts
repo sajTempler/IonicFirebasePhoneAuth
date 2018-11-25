@@ -1,9 +1,9 @@
-import {Component, ViewChild, OnInit} from '@angular/core';
+import {Component, ViewChild, OnInit, OnDestroy} from '@angular/core';
 import {IonicPage, NavController, AlertController, TextInput} from 'ionic-angular';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Firebase} from '@ionic-native/firebase';
 import firebase from 'firebase/app';
-import {map} from 'rxjs/operators/map';
+import {Subscription} from 'rxjs';
 
 /**
  * Generated class for the LoginPage page.
@@ -17,9 +17,11 @@ import {map} from 'rxjs/operators/map';
   selector: 'page-login',
   templateUrl: 'login.html',
 })
-export class LoginPage implements OnInit {
+export class LoginPage implements OnInit, OnDestroy {
 
   @ViewChild('phoneNumber') phoneNumber: TextInput;
+
+  private authSub: Subscription;
 
   constructor(
     private navCtrl: NavController,
@@ -30,16 +32,16 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('LoginPage ngOnInit');
-    this.fireAuth.authState.pipe(
-      map(async (auth: firebase.User) => {
-        const token = await auth.getIdToken();
-        console.log('LoginPage ngOnInit() token', token);
-        if (token) {
-          this.doLogin();
-        }
-      })
-    );
+    this.authSub = this.fireAuth.authState.subscribe((user: firebase.User) => {
+      console.log('LoginPage user', user);
+      if (user) {
+        this.doLogin();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.authSub.unsubscribe();
   }
 
   async registerPhone(): Promise<void> {
@@ -50,8 +52,7 @@ export class LoginPage implements OnInit {
 
   private async verifyCode(code: string, verificationId: string): Promise<void> {
     const credential = await firebase.auth.PhoneAuthProvider.credential(verificationId, code);
-    await firebase.auth().signInAndRetrieveDataWithCredential(credential);
-    this.doLogin();
+    await this.fireAuth.auth.signInAndRetrieveDataWithCredential(credential);
   }
 
   private showPrompt(verificationId: string): void {
