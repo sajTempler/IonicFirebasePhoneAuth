@@ -1,0 +1,7 @@
+{
+  "name": "IonicFirebasePhoneAuth",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
