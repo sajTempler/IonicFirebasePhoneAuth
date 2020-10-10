@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>+48</ion-label>
+      <ion-input #phoneNumber type="tel" maxlength="9"></ion-input>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
+
+<ion-footer class="login-footer">
+  <button full ion-button class="login-btn" (click)="registerPhone()">Go</button>
+</ion-footer>
