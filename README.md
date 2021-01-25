@@ -1,4 +1,4 @@
-## For Ionic 4 check the branch ionic_4
+## For Ionic 4 check the branch ionic_4 - working version
 
 ## Project setup:
 
